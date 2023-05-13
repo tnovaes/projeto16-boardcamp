@@ -27,7 +27,7 @@ export async function insertCustomers(req, res) {
 
     try {
         const cpfVerification = await db.query(`SELECT * FROM customers WHERE cpf = $1;`, [cpf]);
-        if (cpfVerification.rows[0]) return res.status(409).send("Customer already registered");
+        if (cpfVerification.rowCount) return res.status(409).send("Customer already registered");
 
         await db.query(`
         INSERT INTO customers (name, phone, cpf, birthday) 
@@ -44,7 +44,7 @@ export async function getCustomersById(req, res) {
 
     try {
         const customers = await db.query(`SELECT * FROM customers WHERE id = $1;`, [id]);
-        if (!customers.rows[0]) return res.status(404).send("Customer not registered");
+        if (!customers.rowCount) return res.status(404).send("Customer not registered");
 
         const formatCustomer = {...customers.rows[0], birthday:dayjs(customers.rows[0].birthday).format('YYYY-MM-DD')}
 
@@ -59,8 +59,8 @@ export async function updateCustomers(req, res) {
     const { name, phone, cpf, birthday } = req.body;
 
     try {
-        const cpfVerification = await db.query(`SELECT * FROM customers WHERE cpf = $1 AND id != $2;`, [cpf, id]);
-        if(cpfVerification.rows) return res.status(409).send("CPF already registered");
+        const cpfVerification = await db.query(`SELECT * FROM customers WHERE cpf = $1 AND id <> $2;`, [cpf, id]);
+        if(cpfVerification.rowCount) return res.status(409).send("CPF already registered");
      
         await db.query(`
         UPDATE customers SET name = $1, phone = $2, cpf = $3, birthday = $4 
