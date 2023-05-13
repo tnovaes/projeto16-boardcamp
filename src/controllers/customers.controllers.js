@@ -12,7 +12,7 @@ export async function getCustomers(req, res) {
                 name: c.name,
                 phone: c.phone,
                 cpf: c.cpf,
-                birthday: dayjs(c.birthday).format('YYYY/MM/DD')
+                birthday: dayjs(c.birthday).format('YYYY-MM-DD')
             }
         })
 
@@ -46,7 +46,7 @@ export async function getCustomersById(req, res) {
         const customers = await db.query(`SELECT * FROM customers WHERE id = $1;`, [id]);
         if (!customers.rows[0]) return res.status(404).send("Customer not registered");
 
-        const formatCustomer = {...customers.rows[0], birthday:dayjs(customers.rows[0].birthday).format('YYYY/MM/DD')}
+        const formatCustomer = {...customers.rows[0], birthday:dayjs(customers.rows[0].birthday).format('YYYY-MM-DD')}
 
         res.send(formatCustomer);
     } catch (err) {
