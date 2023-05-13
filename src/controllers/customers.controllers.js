@@ -20,7 +20,7 @@ export async function insertCustomers(req, res) {
 
         await db.query(`
         INSERT INTO customers (name, phone, cpf, birthday) 
-            VALUES ($1, $2, $3, $4);`, [name, phone, cpf, birthday]);
+            VALUES ($1, $2, $3, $4);`, [name, phone, cpf, birthday.slice(0,10)]);
 
         res.sendStatus(201);
     } catch (err) {
@@ -51,7 +51,7 @@ export async function updateCustomers(req, res) {
 
         await db.query(`
         UPDATE customers SET name = $1, phone = $2, cpf = $3, birthday = $4 
-            WHERE id = $5;`, [name, phone, cpf, birthday, id]);
+            WHERE id = $5;`, [name, phone, cpf, birthday.slice(0,10), id]);
 
         res.sendStatus(200);
     } catch (err) {
