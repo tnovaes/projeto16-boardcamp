@@ -56,7 +56,7 @@ export async function returnRental(req, res) {
     try {
         const rental = await db.query(`SELECT * FROM rentals WHERE id = $1;`, [id]);
         if (!rental.rowCount) return res.sendStatus(404);
-        if (!rental.rows[0].returnDate) return res.sendStatus(400);
+        if (rental.rows[0].returnDate) return res.sendStatus(400);
 
         const game = await db.query(`SELECT * FROM games WHERE id = $1;`, [rental.rows[0].gameId])
 
