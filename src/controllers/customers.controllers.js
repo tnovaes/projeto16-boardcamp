@@ -8,10 +8,7 @@ export async function getCustomers(req, res) {
 
         const formatCustomers = customers.rows.map(c => {
             return {
-                id: c.id,
-                name: c.name,
-                phone: c.phone,
-                cpf: c.cpf,
+                ...c,
                 birthday: dayjs(c.birthday).format('YYYY-MM-DD')
             }
         })
